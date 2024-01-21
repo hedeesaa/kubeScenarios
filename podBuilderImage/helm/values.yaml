@@ -1,0 +1,56 @@
+nameOverride: ""
+fullnameOverride: ""
+
+pod:
+  name: "helloworld"
+  image:
+    repository: ""
+    pullPolicy: Never
+    tag: "latest"
+
+  initcontainer:
+    name: "builder"
+    image:
+      repository: ghcr.io/kubeScenarios/podbuilderimage
+      pullPolicy: IfNotPresent
+      tag: "latest"
+
+service:
+  type: ClusterIP
+  port: "5000"
+
+ingress:
+  enabled: false
+  hosts:
+    - host: "example.com"
+      paths:
+        - path: /
+          pathType: Prefix
+
+configmap:
+  enabled: false
+volume:
+  enabled: false
+serviceAccount:
+  create: false
+
+imagePullSecrets: []
+
+resources: {}
+
+replicaCount: 1
+
+podAnnotations: {}
+
+podSecurityContext:
+  {}
+  # fsGroup: 2000
+
+autoscaling:
+  enabled: false
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

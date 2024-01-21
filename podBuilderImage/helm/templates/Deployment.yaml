@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}
+  labels:
+    {{- include "helm.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "helm.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "helm.selectorLabels" . | nindent 8 }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "helm.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Values.pod.name }}
+          image: "{{ .Values.pod.image.repository }}:{{ .Values.pod.image.tag}}"
+          imagePullPolicy: {{ .Values.pod.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          {{- if  .Values.volume.enabled }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "helm.fullname" . }}
+          {{- end }}
+          {{- if  .Values.volume.enabled }}
+          volumeMounts:
+          - name: vol
+            mountPath: {{ .Values.volume.path }}
+          {{- end }}
+      
+      initContainers:
+        - name: {{ .Values.pod.initcontainer.name }}
+          image: "{{ .Values.pod.initcontainer.image.repository }}:{{ .Values.pod.initcontainer.image.tag}}"
+          imagePullPolicy: {{ .Values.pod.initcontainer.image.pullPolicy }}
+          command: ['sh', '-c', "sleep 1000"]
+      {{- if  .Values.volume.enabled }}
+      volumes:
+      - name: vol
+        persistentVolumeClaim:
+          claimName: {{ include "helm.fullname" . }}-pvc
+      {{- end }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
