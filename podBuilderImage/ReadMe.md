@@ -1,32 +1,42 @@
-# PodBuilerImage
+# PodBuilderImage
 
-Create a Pod and a Service in the Kubernetes cluster.
-The Service can expose a “Hello World” web page running in the Pod. And in the Pod, there are 2 containers. “Hello World” container and “builder” container.
+This project facilitates the creation of a Pod and a Service within a Kubernetes cluster. The Service exposes a "Hello World" web page running in the Pod, which consists of two containers: the "Hello World" container and the "builder" container.
 
-- The “Hello World” container is running a web server and can display a “Hello World” webpage.
-- The “builder” container can build the image of the “Hello World” container on the fly. That
-  means after the “builder” container is created, it can download Docker files from Internet and build an image for the “Hello World” container. You don’t have to push the image to a registry. The containerd runtime of the node where the “builder” container is running can retrieve and use the image directly.
+- The "Hello World" container hosts a web server capable of displaying a "Hello World" webpage.
+- The "builder" container dynamically builds the image of the "Hello World" container on the fly. This implies that after the creation of the "builder" container, it can download Docker files from the internet and construct an image for the "Hello World" container. There is no need to push the image to a registry; instead, the containerd runtime of the node where the "builder" container resides can retrieve and use the image directly.
 
-## Prerequisite
+## Prerequisites
 
-- Kubernetes Cluster (I used [Kind](https://kind.sigs.k8s.io/))
+- Kubernetes Cluster (I utilized [Kind](https://kind.sigs.k8s.io/))
 
-## Breakdown the issue
+## Issue Breakdown
 
-1. An initContainer to  
-   a. download dockerfile from internet  
-   b. build docker image from that dockerfile  
-   c. save the docker image inside the node so that node cluster can have access to it.
+| Step | Description                                                                         | Path                   |
+| ---- | ----------------------------------------------------------------------------------- | ---------------------- |
+| 1    | Incorporate an initContainer to:                                                    | [builder/](./builder/) |
+|      | - a. Download the Dockerfile from the internet.                                     |                        |
+|      | - b. Build a Docker image from the downloaded Dockerfile.                           |                        |
+|      | - c. Save the Docker image within the node, enabling the node cluster to access it. |                        |
+| 2    | Create a simple webpage Pod + Service + Ingress.                                    | [webpage/](./webpage/) |
+| 3    | Develop a Helm chart.                                                               | [helm/](./helm/)       |
 
-   ```
-   # login to docker
-   docker login ghcr.io --username hedeesaa
-   ```
+**NOTE**:
 
-2. An simple webpage pod + service + ingress
-3. Helm chart
+```bash
+# Login to Docker
+docker login ghcr.io --username hedeesaa
 
-# TODO:
+# Docker Build on MacOS
+docker build --no-cache --platform linux/amd64 . -t ghcr.io/hedeesaa/kubescenarios/kaniko:latest
 
-1. Github action to upload to builder
-2. Github action to build helm
+# Package a chart directory into a chart archive
+helm package helm/
+
+# Install local helm chart
+helm install podbuilerimage ./podbuilderimage-0.1.0.tgz
+```
+
+## TODO
+
+- [ ] Implement a Github action to upload to the builder.
+- [ ] Implement a Github action to build Helm charts.

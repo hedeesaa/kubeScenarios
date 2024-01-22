@@ -20,7 +20,7 @@ service:
   port: "5000"
 
 ingress:
-  enabled: false
+  enabled: true
   hosts:
     - host: "example.com"
       paths:

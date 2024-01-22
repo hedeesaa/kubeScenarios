@@ -41,9 +41,6 @@ app: {{ include "helm.fullname" . }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
-{{- if .Values.team }}
-team: {{ .Values.team }}
-{{- end }}
 {{- end }}
 
 {{/*
@@ -53,9 +50,6 @@ Selector labels
 app.kubernetes.io/name: {{ include "helm.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app: {{ include "helm.fullname" . }}
-{{- if .Values.team }}
-team: {{ .Values.team }}
-{{- end }}
 {{- end }}
 
 {{/*
