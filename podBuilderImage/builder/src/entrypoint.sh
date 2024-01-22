@@ -1,6 +1,6 @@
 #!/bin/bash
 
-RUN git clone https://github.com/hedeesaa/kubeScenarios.git
+git clone https://github.com/hedeesaa/kubeScenarios.git
 # Run Kaniko
 /kaniko/executor --dockerfile /kubeScenarios/podBuilderImage/webpage/Dockerfile --context dir:///kubeScenarios/podBuilderImage/webpage/ --destination ghcr.io/hedeesaa/kubescenarios/webpage --no-push --tar-path webpage.tar
 

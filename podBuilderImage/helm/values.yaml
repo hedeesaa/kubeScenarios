@@ -4,7 +4,7 @@ fullnameOverride: ""
 pod:
   name: "helloworld"
   image:
-    repository: ""
+    repository: "ghcr.io/hedeesaa/kubescenarios/webpage"
     pullPolicy: Never
     tag: "latest"
 

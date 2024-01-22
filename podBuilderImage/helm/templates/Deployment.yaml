@@ -37,7 +37,7 @@ spec:
               protocol: TCP
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
-          {{- if  .Values.volume.enabled }}
+          {{- if  .Values.configmap.enabled }}
           envFrom:
             - configMapRef:
                 name: {{ include "helm.fullname" . }}
