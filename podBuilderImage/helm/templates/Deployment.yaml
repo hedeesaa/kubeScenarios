@@ -42,22 +42,21 @@ spec:
             - configMapRef:
                 name: {{ include "helm.fullname" . }}
           {{- end }}
-          {{- if  .Values.volume.enabled }}
-          volumeMounts:
-          - name: vol
-            mountPath: {{ .Values.volume.path }}
-          {{- end }}
-      
+ 
       initContainers:
         - name: {{ .Values.pod.initcontainer.name }}
           image: "{{ .Values.pod.initcontainer.image.repository }}:{{ .Values.pod.initcontainer.image.tag}}"
           imagePullPolicy: {{ .Values.pod.initcontainer.image.pullPolicy }}
-          command: ['sh', '-c', "sleep 1000"]
+          {{- if  .Values.volume.enabled }}
+          volumeMounts:
+            - name: {{ .Values.volume.name}}
+              mountPath: {{ .Values.volume.mountpath}}
+          {{- end }}
       {{- if  .Values.volume.enabled }}
       volumes:
-      - name: vol
-        persistentVolumeClaim:
-          claimName: {{ include "helm.fullname" . }}-pvc
+      - name: {{ .Values.volume.name}}
+        hostPath:
+          path: {{ .Values.volume.hostpath}}
       {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:

@@ -17,5 +17,16 @@ The Service can expose a “Hello World” web page running in the Pod. And in t
    a. download dockerfile from internet  
    b. build docker image from that dockerfile  
    c. save the docker image inside the node so that node cluster can have access to it.
+
+   ```
+   # login to docker
+   docker login ghcr.io --username hedeesaa
+   ```
+
 2. An simple webpage pod + service + ingress
 3. Helm chart
+
+# TODO:
+
+1. Github action to upload to builder
+2. Github action to build helm

@@ -11,8 +11,8 @@ pod:
   initcontainer:
     name: "builder"
     image:
-      repository: ghcr.io/kubeScenarios/podbuilderimage
-      pullPolicy: IfNotPresent
+      repository: ghcr.io/hedeesaa/kubescenarios/kaniko
+      pullPolicy: Always
       tag: "latest"
 
 service:
@@ -27,10 +27,15 @@ ingress:
         - path: /
           pathType: Prefix
 
+volume:
+  enabled: true
+  name: containerd-socket
+  hostpath: /run/containerd/containerd.sock
+  mountpath: /run/containerd/containerd.sock
+
 configmap:
   enabled: false
-volume:
-  enabled: false
+
 serviceAccount:
   create: false
 
