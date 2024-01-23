@@ -36,6 +36,6 @@ jobs:
         with:
           context: ./podBuilderImage/builder/
           file: ./podBuilderImage/builder/Dockerfile
-          push: true #${{ github.ref == 'refs/heads/main' }}
+          push: ${{ github.ref == 'refs/heads/main' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
