@@ -38,6 +38,6 @@ helm install podbuilerimage ./podbuilderimage-0.1.0.tgz
 
 ## TODO
 
-- [ ] Implement a Github action to upload to the builder.
+- [*] Implement a Github action to upload to the builder.
 - [ ] Implement a Github action to build Helm charts.
 - [ ] Edit Dockerfile to be more customizable.
